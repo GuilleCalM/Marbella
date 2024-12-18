@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="headLayout">
+	<meta charset="UTF-8">
+	<title>Minimarket Marbella</title>
+	<link rel="icon" type="image/x-icon" th:href="@{/imagenes/logo1.png}">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.min.js"></script>
+	<link th:href="@{/css/estilos.css}" rel="stylesheet" type="text/css">
+</head>
+
+
+<body>
+<header th:fragment="headerLayout">
+	<style>
+		#footer {
+			width: 100%;
+			background-color: #000000;
+		}
+
+		.footer__section {
+			padding: 10px;
+			width: 100%;
+			position: relative;
+			border:none
+		}
+	</style>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-light" style="width:100%; top:0; height:auto;min-height: 78px; background-color: #ffdd00; position: fixed;z-index: 1000;">
+		<!-- Navbar brand -->
+		<a class="navbar-brand px-4 py-0" th:href="@{/index}">
+			<img th:src="@{/imagenes/logo.png}" height="37" alt="Logo Minimarket" loading="lazy">
+			<span style="font-weight: 500; color:red; font-size:23px">Marbella</span>
+		</a>
+
+		<!-- Toggle button -->
+		<div class="d-flex ms-auto position-absolute top-0 p-2" style="left: 46%;">
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<i class="fas fa-bars"></i>
+			</button>
+		</div>
+		<!-- Collapsible wrapper -->
+		<div class="collapse navbar-collapse text-center" id="navbarNav">
+			<!-- Left links -->
+			<ul class="navbar-nav me-auto px-4">
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownCategorias" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: 500;">
+						Categorías
+					</a>
+					<ul class="dropdown-menu text-center text-lg-start" aria-labelledby="navbarDropdownCategorias">
+						<li><a class="dropdown-item" th:href="@{'/categoria/1'}"style="font-weight: 500;">Abarrotes</a></li>
+						<li><a class="dropdown-item" th:href="@{'/categoria/2'}"style="font-weight: 500;">Frutas y verduras</a></li>
+						<li><a class="dropdown-item" th:href="@{'/categoria/3'}"style="font-weight: 500;">Lácteos y carnes</a></li>
+						<li><a class="dropdown-item" th:href="@{'/categoria/4'}"style="font-weight: 500;">Aseo y limpieza</a></li>
+						<li><a class="dropdown-item" th:href="@{'/categoria/5'}"style="font-weight: 500;">Bebidas</a></li>
+						<li><a class="dropdown-item" th:href="@{'/categoria/6'}"style="font-weight: 500;">Licores</a></li>
+						<li><a class="dropdown-item" th:href="@{'/categoria/7'}"style="font-weight: 500;">Librería</a></li>
+
+					</ul>
+				</li>
+
+
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownNosotros" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: 500;">
+						Nosotros
+					</a>
+					<ul class="dropdown-menu text-center text-lg-start" aria-labelledby="navbarDropdownNosotros">
+						<li><a class="dropdown-item" th:href="@{/contactanos}" style="font-weight: 500; color:dark">Contactanos</a></li>
+					</ul>
+				</li>
+				<li sec:authorize="hasAnyRole('ROLE_Vendedor', 'ROLE_Admin')" class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMantenimiento" role="button" style="font-weight: 500;" data-bs-toggle="dropdown" aria-expanded="false">
+						Mantenimiento
+					</a>
+					<ul class="dropdown-menu text-center text-lg-start" aria-labelledby="navbarDropdownMantenimiento">
+						<li sec:authorize="hasRole('ROLE_Admin')"><a class="dropdown-item" th:href="@{/listarUsuario}"style="font-weight: 500;">Usuarios</a></li>
+						<li sec:authorize="hasRole('ROLE_Admin')"><a class="dropdown-item" th:href="@{/listarCliente}"style="font-weight: 500;">Clientes</a></li>
+						<li sec:authorize="hasRole('ROLE_Admin')"><a class="dropdown-item" th:href="@{/listarProducto}"style="font-weight: 500;">Productos</a></li>
+						<li sec:authorize="hasAnyRole('ROLE_Vendedor', 'ROLE_Admin')"><a class="dropdown-item" th:href="@{/listarPedido}" style="font-weight: 500;">Pedidos</a></li>
+						<li sec:authorize="hasRole('ROLE_Admin')"><a class="dropdown-item" th:href="@{/listarHoja}"style="font-weight: 500;">Reparto</a></li>
+					</ul>
+				</li>
+				<li sec:authorize="hasAnyRole('ROLE_Admin')" class="nav-item dropdown" >
+					<a class="nav-link dropdown-toggle text-dark" style="font-weight: 500;" th:href="@{/reporte}" role="button">
+						Reportes
+					</a>
+				</li>
+			</ul>
+			<!-- Left links -->
+		</div>
+		<!-- Collapsible wrapper -->
+		<!-- Right elements -->
+		<div class="d-flex ms-auto position-absolute top-0 end-0 p-2 text-center" >
+			<a class="text-reset me-3"  th:href="@{/misPedidos}"  sec:authorize="isAuthenticated() and hasRole('Cliente')" style="text-decoration: none;">
+				<span style="font-size: 19px;font-weight: 900;">Mis</span> <br>
+				<span style="font-size: 19px; font-weight: 900; margin-top:-2px;">Compras</span>
+			</a>
+			<a class="text-reset me-3 ver-favorito" id="wishlistBtn"  style="display:flex; flex-direction: column;text-decoration: none;color: #000;">
+				<i class="fa-regular fa-heart text-dark" style="font-size: 30px; margin-top:2px; "></i>
+				<p style="font-weight: 500;">Lista deseos</p>
+			</a>
+			<!-- Icon -->
+			<a class="text-reset me-3" th:href="@{/carrito}" style="display:flex; flex-direction: column;text-decoration: none;color: #000;">
+				<i class="fa-solid fa-cart-shopping text-dark" style="font-size: 30px; margin-top:2px; "></i>
+				<p style="font-weight: 500;">Carrito</p>
+			</a>
+			<!-- Avatar -->
+			<div class="dropdown">
+				<a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="
+						display:flex; flex-direction: column;text-decoration: none;color: #000;font-weight: 500;">
+					<img th:src="@{/imagenes/usuario_blanco.png}" class="rounded-circle" height="30" alt="Avatar" loading="lazy" style="font-weight: 500;"> Mi Cuenta
+				</a>
+				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
+					<li sec:authorize="isAuthenticated()" class="text-center bg-light"><strong> Bienvenido: <div sec:authentication="name"></div></strong></li>
+					<li><a class="dropdown-item" href="#" data-bs-toggle="modal" th:data-bs-target="@{#loginModal}" th:unless="${#authorization.expression('isAuthenticated()')}">Iniciar Sesión</a></li>
+					<li><a class="dropdown-item" href="#" data-bs-toggle="modal" th:data-bs-target="@{#registroModal}" th:unless="${#authorization.expression('isAuthenticated()')}">Registrarse</a></li>
+					<li><a class="dropdown-item" href="#" data-bs-toggle="modal" th:data-bs-target="@{#contrasenaModal}" sec:authorize="isAuthenticated()">Cambiar contraseña</a></li>
+					<li><a class="dropdown-item" th:href="@{/logout}" sec:authorize="isAuthenticated()">Cerrar sesion</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- Right elements -->
+	</nav>
+	<!-- Modal para login -->
+	<div class="container">
+
+		<form th:action="@{/login}" method="post" th:object="${usuario}" class="modal fade" th:id="@{loginModal}" tabindex="-1" role="dialog" aria-labelledby="ModalLogin" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="container text-center">
+							<img alt="100" width="100" th:src="@{/imagenes/logo1.png}" style="border-radius: 20%">
+							<h2 class="fw-bold-md-4 pb-2" style="color: #27A900;">Iniciar Sesión</h2>
+							<div class="form-group">
+								<input type="text" name="username" id="username" class="form-control input" required autocomplete="off">
+								<label for="username" class="form-label">Usuario</label>
+							</div>
+							<div class="form-group">
+								<input type="password" name="password" id="password" class="form-control input" required autocomplete="off">
+								<i class="fa-solid fa-eye" onclick="show()" style="position: absolute; right: 40px; bottom: 60px; color: #27A900; cursor: pointer;"></i>
+								<label for="password" class="form-label">Contraseña</label>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a data-bs-toggle="modal" th:data-bs-target="@{#registroModal}" class="btn btn-primary">Registrarse</a>
+						<button type="submit" class="btn btn-warning">Iniciar Sesión</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- Modal para Registro de clientes -->
+	<div class="container">
+		<form th:action="@{/registrarCliente}" method="post" th:object="${cliente}" class="modal fade" th:id="@{registroModal}" tabindex="-1" role="dialog" aria-labelledby="ModalLogin" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="text-center">
+							<img alt="100" width="100" th:src="@{/imagenes/logo1.png}" style="border-radius: 20%">
+							<h2 class="fw-bold-md-4 pb-2" style="color: #27A900;">Registrarse</h2>
+						</div>
+						<div class="row">
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Nombres</label>
+									<input type="text" name="nombreCli" th:field="*{nombreCli}" class="form-control" />
+									<small th:if="${#fields.hasErrors('nombreCli')}" th:errors="*{nombreCli}" class="form-text text-danger"></small>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Apellidos</label>
+									<input type="text" name="apellidosCli" th:field="*{apellidosCli}" class="form-control"/>
+									<small th:if="${#fields.hasErrors('apellidosCli')}" th:errors="*{apellidosCli}" class="form-text text-danger"></small>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Dirección</label>
+									<input type="text" name="direccionCli" th:field="*{direccionCli}" class="form-control"/>
+									<small th:if="${#fields.hasErrors('direccionCli')}" th:errors="*{direccionCli}" class="form-text text-danger"></small>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Teléfono</label>
+									<input type="text" name="telefCli" th:field="*{telefCli}" class="form-control"/>
+									<small th:if="${#fields.hasErrors('telefCli')}" th:errors="*{telefCli}" class="form-text text-danger"></small>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>DNI</label>
+									<input type="text" name="dniCli" th:field="*{dniCli}" class="form-control"/>
+									<small th:if="${#fields.hasErrors('dniCli')}" th:errors="*{dniCli}" class="form-text text-danger"></small>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Login</label>
+									<input type="text" name="codUsu.nombreUsu" th:field="*{codUsu.nombreUsu}" class="form-control"/>
+									<small th:if="${#fields.hasErrors('codUsu.nombreUsu')}" th:errors="*{codUsu.nombreUsu}" class="form-text text-danger"></small>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Contraseña</label>
+									<input type="text" name="codUsu.contrasenaUsu" th:field="*{codUsu.contrasenaUsu}" class="form-control"/>
+									<small th:if="${#fields.hasErrors('codUsu.contrasenaUsu')}" th:errors="*{codUsu.contrasenaUsu}" class="form-text text-danger"></small>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Repetir Contraseña</label>
+									<input type="text" name="codUsu.contrasenaUsu2" th:field="*{codUsu.contrasenaUsu2}" class="form-control"/>
+									<small th:if="${#fields.hasErrors('codUsu.contrasenaUsu2')}" th:errors="*{codUsu.contrasenaUsu2}" class="form-text text-danger"></small>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-warning">Registrarse</button>
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- Modal para cambio de contraseña -->
+	<div class="container">
+		<form th:action="@{/cambiarContrasena}" method="post" th:object="${usuario}" class="modal fade" th:id="@{contrasenaModal}" tabindex="-1" role="dialog" aria-labelledby="ModalContrasena" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="text-center">
+							<img alt="100" width="100" th:src="@{/imagenes/logo.png}" style="border-radius: 20%">
+							<h2 class="fw-bold-md-4 pb-2" style="color: #27A900;">Cambio de Contraseña</h2>
+						</div>
+						<div class="row">
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Login</label>
+									<input type="text" name="nombreUsu" th:value="${#authentication.name}"  class="form-control" disabled/>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Contraseña Antigua</label>
+									<input type="text" name="contrasenaActual" class="form-control" required/>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Nueva Contraseña</label>
+									<input type="text" name="nuevaContrasena" class="form-control" required/>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+								<div class="form-group">
+									<label>Repetir Contraseña</label>
+									<input type="text" name="nuevaContrasena2" class="form-control" required/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary">Actualizar</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- Navbar -->
+
+	<!-- Lista de Deseos -->
+	<div class="wishlist-container">
+		<div class="wishlist-header" style="background-color:#ffdd00">
+			<h5 style="font-weight:500">Lista de Deseos</h5>
+			<span class="close-btn" style="font-size: 30px;" id="closeWishlist">&times;</span>
+		</div>
+		<div class="wishlist">
+			<div class="item">
+
+			</div>
+		</div>
+		<div class="container wishlistVacio" th:if="${#lists.isEmpty(favorito)}">
+			<div class="container text-center mt-2"
+				 style="display: flex; justify-content: center; align-items: center;flex-direction: column; gap: 20px;">
+				<i style="color: #828282; font-weight: 700;font-size: 3rem;"
+				   class="fa-solid fa-heart"></i>
+				<p style="color: #828282; font-weight: 700;">Tu lista de deseo esta vacio</p>
+			</div>
+		</div>
+		<div class="text-center mt-2" sec:authorize="!isAuthenticated()"> <button class="btn btn-outline-warning" data-bs-toggle="modal" th:data-bs-target="@{#loginModal}">Iniciar sesión </button></div>
+		<div class="text-center mt-2 lista-favorito" sec:authorize="isAuthenticated()"> <button class="btn btn-outline-warning"> agregar carrito</button></div>
+	</div>
+
+	<div id="mensaje" class="container position-fixed" style="top: 25px; left: 113px; z-index: 9990;">
+		<div th:if="${mensaje != null}" class="alert alert-primary alert-dismissible fade show">
+			[[${mensaje}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	</div>
+	<div id="error" class="container position-fixed" style="top: 25px; left: 113px; z-index: 9990;">
+		<div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show">
+			[[${error}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	</div>
+</header>
+<footer th:fragment="footerLayout" id="footer" class="bg-dark text-white py-4">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="footer__section text-center">
+					<h2 class="h5">NOSOTROS</h2>
+					<img th:src="@{/imagenes/logo1.png}" alt="logo" class="img-fluid rounded-circle" style="width: 100px;">
+					<p class="mb-0" style="font-size: 14px;">Novedades</p>
+					<p class="mb-0" style="font-size: 14px;">Trabaja con nosotros</p>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="footer__section text-center">
+					<h2 class="h5">MÉTODOS DE PAGO</h2>
+					<div class="d-flex justify-content-around" style="margin-top:2rem">
+						<img th:src="@{/imagenes/mastercard.jpg}" alt="" class="img-fluid" style="max-height: 40px;">
+						<img th:src="@{/imagenes/visa.png}" alt="" class="img-fluid" style="max-height: 40px;">
+						<img th:src="@{/imagenes/tarjeta1.png}" alt="" class="img-fluid" style="max-height: 40px;">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="footer__section text-center align-items-center">
+					<h2 class="h5">REDES SOCIALES</h2>
+					<div class="d-flex flex-column justify-content-center align-items-center" style="gap:18px">
+						<div class="d-flex flex-row align-items-center">
+							<i class="fab fa-whatsapp me-2" style="font-size: 30px;"></i>
+							<p class="mb-0" style="font-size: 14px;">Whatsapp</p>
+						</div>
+						<div class="d-flex flex-row align-items-center">
+							<i class="fab fa-instagram me-2" style="font-size: 30px;"></i>
+							<p class="mb-0" style="font-size: 14px;">Instagram</p>
+						</div>
+						<div class="d-flex flex-row align-items-center">
+							<i class="fab fa-facebook me-2" style="font-size: 30px;"></i>
+							<p class="mb-0" style="font-size: 14px;">Facebook</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script th:fragment="scriptValidacionLayout" th:if="${validationError}">
+	$(document).ready(function() {
+		$('#registroModal').modal('show');
+	});
+</script>
+<script th:fragment="scriptLayout">
+	//Implementación de asistente virtual WatsonX de IBM
+	window.watsonAssistantChatOptions = {
+		integrationID: "0d95fb37-28f5-4272-8f52-cb3e2ae3f90b", // The ID of this integration.
+		region: "us-east", // The region your integration is hosted in.
+		serviceInstanceID: "845475b9-64d3-4011-b31e-6aa79c502683", // The ID of your service instance.
+		onLoad: async (instance) => { await instance.render(); }
+	};
+	setTimeout(function(){
+		const t=document.createElement('script');
+		t.src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
+		document.head.appendChild(t);
+	});
+
+	var e = true;
+	$(document).ready(function () {
+		// Abrir Lista de Deseos
+		$("#wishlistBtn").click(function () {
+			if (e) {
+				$(".wishlist-container").css("right", "0");
+				e = false;
+			} else {
+				$(".wishlist-container").css("right", "-300px");
+				e = true;
+			}
+
+		});
+
+		// Cerrar Lista de Deseos
+		$("#closeWishlist").click(function () {
+			$(".wishlist-container").css("right", "-300px");
+			e = true;
+		});
+	});
+
+
+	function show() {
+		var pswrd = document.getElementById('password');
+		var icon = document.querySelector('.fa-solid');
+		if (pswrd.type === "password") {
+			pswrd.type = "text";
+			icon.className = "fa-solid fa-eye-slash";
+		} else {
+			pswrd.type = "password";
+			icon.className = "fa-solid fa-eye";
+		}
+	}
+	// Función para cerrar una alerta después de 3 segundos
+	function cerrarAlerta($alert) {
+		setTimeout(function () {
+			$alert.alert('close');
+		}, 3000);
+	}
+
+	// Cerrar alertas existentes cuando se carga la página
+	$(document).ready(function () {
+		var $alerts = $(".alert");
+		$alerts.each(function () {
+			var $alert = $(this);
+			cerrarAlerta($alert);
+		});
+	});
+
+	// Cerrar alertas cuando se insertan en el documento
+	$(document).on("DOMNodeInserted", ".alert", function () {
+		var $alert = $(this);
+		cerrarAlerta($alert);
+	});
+	$(document).ready(function() {
+		$('.agregar-deseo').on('click', function() {
+			var codPro = $(this).data('product-id');
+			var cod = parseInt(codPro,10);
+			console.log(codPro)
+			$.ajax({
+				url: '/agregarFavorito',
+				type: 'POST',
+				data: { codPro:cod },
+				success: function(response) {
+					if(response === 'OK'){
+						$("#error").html('<div class="alert alert-primary alert-dismissible fade show">Producto agregado al lista deseos<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					}
+				},
+				error: function(error) {
+					if (error.status === 400) {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">El producto ya exixte en lista de deseos <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					} else if (error.status === 404) {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">El producto ya no se encuentra disponible en nuestro catálogo.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					} else {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">Se ha producido un error al agregar el producto al carrito.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					}
+				}
+			});
+		});
+	});
+
+	$(document).ready(function () {
+		$('.ver-favorito').on('click', function () {
+			var cod = $(this).data('pedido-id');
+			var codPed = parseInt(cod, 10);
+
+			$.ajax({
+				url: '/listarFavoritos',
+				type: 'GET',
+				dataType: 'json',
+				success: function (data) {
+					console.log(data)
+					// Limpiar el contenedor antes de agregar nuevos elementos
+					$('.wishlist').empty();
+					if(data.length > 0){
+						$('.wishlistVacio').empty();
+					}
+
+					// Iterar sobre los datos y construir elementos HTML
+					for (var i = 0; i < data.length; i++) {
+						var producto = data[i];
+						var imgSrc = '/uploads/' + producto.imgPro + '?categoria=' + producto.categoria.nombreCategoria;
+						var elementoHTML = '<div class="item">' +
+								'<img src="' + imgSrc + '" width="40" alt="img">' +
+								'<div class="details" style="margin-left: 10px;">' +
+								'<div class="name">' + producto.descripcionPro + '</div>' +
+								'<div class="price">' + producto.codPro + '</div>' +
+								'</div>' +
+								'</div>';
+
+						// Agregar el elemento al contenedor
+						$('.wishlist').append(elementoHTML);
+					}
+				},
+				error: function (error) {
+
+				}
+			});
+
+		});
+	});
+
+	$(document).ready(function() {
+		$('.lista-favorito').on('click', function() {
+			$.ajax({
+				url: '/agregarFavoritoCarrito',
+				type: 'POST',
+				data: {},
+				success: function(response) {
+					if(response === 'OK'){
+						$("#error").html('<div class="alert alert-primary alert-dismissible fade show">Productos agregado al carrito <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+						$('.wishlist').empty();
+					}
+				},
+				error: function(error) {
+					if (error.status === 400) {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">Tu lista de deseos esta vacio <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					} else if (error.status === 404) {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">El producto ya no se encuentra disponible en nuestro catálogo.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					} else {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">Se ha producido un error al agregar el producto al carrito.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					}
+				}
+			});
+		});
+	});
+
+</script>
+
+
+
+<script th:fragment="scriptProductLayout">
+	$(document).ready(function() {
+		$('.agregar').on('click', function() {
+			var codPro = $(this).data('product-id');
+			var cant = $('.cantidad[data-product-id="' + codPro + '"]').val();
+			var cantidad = parseInt(cant,10);
+			var cod = parseInt(codPro,10);
+
+			$.ajax({
+				url: '/agregar',
+				type: 'POST',
+				data: { cantidad: cantidad, codPro: cod },
+				success: function(response) {
+					if(response === 'OK'){
+						$("#error").html('<div class="alert alert-primary alert-dismissible fade show">Producto agregado al carrito<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					}
+				},
+				error: function(error) {
+					if (error.status === 400) {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">Cantidad no disponible en stock<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					} else if (error.status === 404) {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">El producto ya no se encuentra disponible en nuestro catálogo.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					} else {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">Se ha producido un error al agregar el producto al carrito.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					}
+				}
+			});
+		});
+	});
+
+	$(document).ready(function() {
+		$('.agregar-modal').on('click', function() {
+			var codPro = $(this).data('product-id');
+			var cantidad = parseInt($('#cantidad-' + codPro).val(), 10);
+			var cod = parseInt(codPro,10);
+
+			$.ajax({
+				url: '/agregar',
+				type: 'POST',
+				data: { cantidad: cantidad, codPro: cod },
+				success: function(response) {
+					if(response === 'OK'){
+						$("#error").html('<div class="alert alert-primary alert-dismissible fade show">Producto agregado al carrito<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					}
+				},
+				error: function(error) {
+					if (error.status === 400) {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">Cantidad no disponible en stock<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					} else if (error.status === 404) {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">El producto ya no se encuentra disponible en nuestro catálogo.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					} else {
+						$("#error").html('<div class="alert alert-danger alert-dismissible fade show">Se ha producido un error al agregar el producto al carrito.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+					}
+				}
+			});
+		});
+	});
+
+
+
+</script>
+<div th:fragment="scripts">
+	<script>
+
+	</script>
+</div>
+</body>
+</html>
