@@ -59,7 +59,16 @@ public class ProductoService implements IProducto {
 	        return data.findAll(pageRequest);
 	    }
     }
-	
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Producto> buscarPorNombreOMarca(String busqueda) {
+		if (busqueda != null && !busqueda.trim().isEmpty()) {
+			return data.findByNombreProContainingOrMarca_NombreMarcaContaining(busqueda, busqueda);
+		} else {
+			return null;
+		}
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -100,5 +109,9 @@ public class ProductoService implements IProducto {
 	    } else {
 	        return 7000;
 	    }
+    }
+
+    public Producto obtenerProductoPorId(int id) {
+		return data.findById(id).orElse(null);
     }
 }

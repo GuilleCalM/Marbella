@@ -88,4 +88,7 @@ public class PedidoService implements IPedido {
     }
 
 
+    public Pedido buscarPorId(int id) {
+        return data.findById(id).orElse(null);
+    }
 }
