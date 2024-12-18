@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{Layout/Layout :: headLayout}"></head>
+<body>
+	<header th:replace="~{Layout/Layout :: headerLayout}"></header>
+	<div class="container" style="margin-top:80px">
+		<h1>LISTADO DE CLIENTES</h1>
+		<div class="p-2">
+			<a th:href="@{nuevoCliente}" class="btn btn-primary">Registrar cliente</a>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-hover align-middle table-bordered text-center rounded-3 overflow-hidden">
+				<thead class="table-dark">
+					<tr>
+						<th>ID</th>
+						<th>NOMBRES</th>
+						<th>APELLIDOS</th>
+						<th>DNI</th>
+						<th>TELEFONO</th>
+						<th>VER</th>
+						<th>EDITAR</th>
+						<th>SUPRIMIR</th>
+					</tr>
+				</thead>
+				<tbody class="table-group-divider">
+					<tr th:each="reg:${listaCli}">
+						<td th:text="${reg.codCli}"></td>
+						<td th:text="${reg.nombreCli}"></td>
+						<td th:text="${reg.apellidosCli}"></td>
+						<td th:text="${reg.dniCli}"></td>
+						<td th:text="${reg.telefCli}"></td>
+						<td>
+							<a th:href="@{/verOEditarCliente/}+${reg.codCli}+'?editar=false&page=' + ${currentPage}" class="btn btn-info">Ver</a>
+						</td>
+						<td>
+							<a th:href="@{/verOEditarCliente/}+${reg.codCli}+'?editar=true&page=' + ${currentPage}" class="btn btn-warning">Editar</a>
+						</td>
+						<td>
+							<a th:href="@{/eliminarCliente/}+${reg.codCli}+'?page=' + ${currentPage}" class="btn btn-danger">Suprimir</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- Paginación -->
+		<div>
+		    <ul class="pagination" th:if="${totalPages > 0}">
+		        <li th:class="${currentPage == 1} ? 'page-item disabled' : 'page-item'">
+		            <a class="page-link" th:href="@{/listarCliente(page=1)}" aria-label="First">
+		                <span aria-hidden="true">&laquo;&laquo;</span>
+		            </a>
+		        </li>
+		        <li th:if="${currentPage > 3}">
+					<span>
+				    	<span class="page-link pagination-dots">...</span>
+				    </span>
+				</li>
+		        <li th:each="page,stat : ${#numbers.sequence(1, totalPages)}" th:class="${page == currentPage} ? 'page-item active' : 'page-item'">
+
+		            <span th:if="${currentPage >= page - 2 and currentPage <= page + 2}">
+				        <a class="page-link" th:href="@{/listarCliente(page=${page})}" th:text="${page}"></a>
+				    </span>
+		        </li>
+		        <li th:if="${currentPage < totalPages - 2}">
+					<span>
+				    	<span class="page-link pagination-dots">...</span>
+				    </span>
+				</li>
+		        <li th:class="${currentPage == totalPages} ? 'page-item disabled' : 'page-item'">
+		            <a class="page-link" th:href="@{/listarCliente(page=${totalPages})}" aria-label="Last">
+		                <span aria-hidden="true">&raquo;&raquo;</span>
+		            </a>
+		        </li>
+		    </ul>
+		</div>
+	</div>
+	<footer th:replace="~{Layout/Layout :: footerLayout}"></footer>
+	<script th:replace="~{Layout/Layout :: scriptLayout}"></script>
+</body>
+</html>

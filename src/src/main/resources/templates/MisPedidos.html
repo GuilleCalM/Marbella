@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{Layout/Layout :: headLayout}"></head>
+
+<body>
+	<header th:replace="~{Layout/Layout :: headerLayout}"></header>
+	<div class="container" style="margin-top:80px">
+		<h4 class="text-center">Mis Compras</h4>
+		<div class="table-responsive">
+			<table class="table table-hover align-middle table-bordered text-center rounded-3 overflow-hidden">
+				<thead class="table-dark">
+					<tr>
+						<th>ID</th>
+						<th>ESTADO</th>
+						<th>FECHA</th>
+						<th>MONTO TOTAL</th>
+						<th>VER</th>
+					</tr>
+				</thead>
+				<tbody class="table-group-divider">
+					<tr th:each="reg:${pedido}">
+						<td th:text="${reg.codPed}"></td>
+						<td th:text="${reg.codEst.descripEstado}"></td>
+						<td th:text="${reg.fechaPedido}"></td>
+						<td th:text="'S/ ' + ${#numbers.formatDecimal(reg.montoTotal, 1, 2)}"></td>
+						<td>
+							<button th:data-pedido-id="${reg.codPed}" class="btn ver-pedido"><i style="font-size: 35px;"
+									data-bs-toggle="modal" data-bs-target="#exampleModal"
+									class="fa-solid fa-circle-info"></i></button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- DETALLE PEDIDO -->
+
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div>
+							<div class="container mt-2 mb-2">
+								<h2 class="text-center"> DETALLE PEDIDO </h2>
+							</div>
+							<table id="detalle-pedido"
+								class="table table-hover align-middle table-bordered text-center rounded-3 overflow-hidden">
+								<thead class="table-dark">
+									<tr>
+										<th>ID</th>
+										<th class="text-center">PRODUCTO</th>
+										<th>DESCRIPCIÓN</th>
+										<th>PRECIO</th>
+										<th>CANTIDAD</th>
+										<th>SUBTOTAL</th>
+									</tr>
+								</thead>
+								<tbody>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Paginación -->
+		<div>
+			<ul class="pagination" th:if="${totalPages > 0}">
+				<li th:class="${currentPage == 1} ? 'page-item disabled' : 'page-item'">
+					<a class="page-link" th:href="@{/misPedidos(page=1)}" aria-label="First">
+						<span aria-hidden="true">&laquo;&laquo;</span>
+					</a>
+				</li>
+				<li th:if="${currentPage > 3}">
+					<span>
+						<span class="page-link pagination-dots">...</span>
+					</span>
+				</li>
+				<li th:each="page,stat : ${#numbers.sequence(1, totalPages)}"
+					th:class="${page == currentPage} ? 'page-item active' : 'page-item'">
+
+					<span th:if="${currentPage >= page - 2 and currentPage <= page + 2}">
+						<a class="page-link" th:href="@{/misPedidos(page=${page})}" th:text="${page}"></a>
+					</span>
+				</li>
+				<li th:if="${currentPage < totalPages - 2}">
+					<span>
+						<span class="page-link pagination-dots">...</span>
+					</span>
+				</li>
+				<li th:class="${currentPage == totalPages} ? 'page-item disabled' : 'page-item'">
+					<a class="page-link" th:href="@{/misPedidos(page=${totalPages})}" aria-label="Last">
+						<span aria-hidden="true">&raquo;&raquo;</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<footer th:replace="~{Layout/Layout :: footerLayout}"></footer>
+	<script th:replace="~{Layout/Layout :: scriptLayout}"></script>
+	<script>
+		$(document).ready(function () {
+			$('.ver-pedido').on('click', function () {
+				var cod = $(this).data('pedido-id');
+				var codPed = parseInt(cod, 10);
+
+				$.ajax({
+					url: '/verPedido/' + codPed,
+					type: 'GET',
+					dataType: 'json',
+					success: function (data) {
+
+						var tabla = $('#detalle-pedido')
+						tabla.find('tbody').empty();
+
+						for (var i = 0; i < data.length; i++) {
+							var detalle = data[i];
+							var imgSrc = '/uploads/' + detalle.codPro.imgPro + '?categoria=' + detalle.codPro.categoria.nombreCategoria;
+
+							// Crear una fila
+							var fila = '<tr class="align-middle" >' +
+								'<td>' + detalle.codPro.codPro + '</td>' +
+								'<td class="text-center" ><img width="50" src="' + imgSrc + '"></td>' +
+								'<td>' + detalle.codPro.nombrePro + '</td>' +
+								'<td>' + detalle.codPro.precioPro.toFixed(2) + '</td>' +
+								'<td>' + detalle.cantidadDet + '</td>' +
+								'<td>' + detalle.montoDet.toFixed(2) + '</td>' +
+								'</tr>';
+
+							// Agregar la fila al cuerpo de la tabla
+							tabla.find('tbody').append(fila);
+						}
+
+
+					},
+					error: function (error) {
+
+					}
+				});
+
+			});
+		});
+	</script>
+</body>
+
+</html>
