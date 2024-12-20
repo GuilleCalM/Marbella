@@ -3,6 +3,7 @@ package com.marbella.RestController;
 import com.marbella.model.Cliente;
 import com.marbella.model.DTO.PedidoDTO;
 import com.marbella.model.DTO.ProductoDTO;
+import com.marbella.model.DTO.UsernameDTO;
 import com.marbella.model.Pedido;
 import com.marbella.model.Producto;
 import com.marbella.model.Usuario;
@@ -39,15 +40,15 @@ public class WatsonController {
     @Autowired
     private ClienteService cs;
 
-    @PostMapping("/mispedidos/{username}")
-    public ResponseEntity<?> misCompras(@PathVariable String username) {
+    @PostMapping("/mispedidos")
+    public ResponseEntity<?> misCompras(@RequestBody UsernameDTO username) {
         /*String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (username == null || username.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no autenticado");
         }*/
 
-        Usuario usuario = us.buscarPorNombreUsu(username).orElse(null);
+        Usuario usuario = us.buscarPorNombreUsu(username.getUsername()).orElse(null);
         if (usuario == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
         }
