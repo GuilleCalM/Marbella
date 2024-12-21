@@ -2,6 +2,7 @@ package com.marbella.RestController;
 
 import com.marbella.model.Cliente;
 import com.marbella.model.DTO.PedidoDTO;
+import com.marbella.model.DTO.PedidoIdDTO;
 import com.marbella.model.DTO.ProductoDTO;
 import com.marbella.model.DTO.UsernameDTO;
 import com.marbella.model.Pedido;
@@ -82,9 +83,9 @@ public class WatsonController {
     }
 
 
-    @PostMapping("/pedidobyid/{id}")
-    public ResponseEntity<?> pedidoPorId(@PathVariable int id) {
-        Pedido pedido = ps.buscarPorId(id);
+    @PostMapping("/pedidobyid")
+    public ResponseEntity<?> pedidoPorId(@RequestBody PedidoIdDTO id) {
+        Pedido pedido = ps.buscarPorId(Integer.parseInt(id.getId()));
         if (pedido == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido no encontrado");
         }
